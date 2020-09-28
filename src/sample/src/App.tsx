@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 
 import AppContext from "./AppContext";
 import Child from "./Child";
-import Reducer from "./Reducer";
+import Update from "./Update";
 import { useLocalStorage } from "./LocalStorage";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
   );
 
   const updateAndPersistState = (state: AppState, msg: AppMsg) => {
-    const updatedState = Reducer(state, msg);
+    const updatedState = Update(state, msg);
     setPersistedState(updatedState);
     return updatedState;
   };
