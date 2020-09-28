@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useReducer } from "react";
+
+import AppContext from "./AppContext";
+import Child from "./Child";
+import Reducer from "./Reducer";
+import { useLocalStorage } from "./LocalStorage";
 
 function App() {
-  return <div>Hello World</div>;
+  const [persistedState, setPersistedState] = useLocalStorage(
+    "State",
+    {} as AppState
+  );
+
+  const updateAndPersistState = (state: AppState, msg: AppMsg) => {
+    const updatedState = Reducer(state, msg);
+    setPersistedState(updatedState);
+    return updatedState;
+  };
+
+  const [state, dispatch] = useReducer(updateAndPersistState, persistedState);
+
+  return (
+    <AppContext.dispatch.Provider value={dispatch}>
+      <AppContext.state.Provider value={state}>
+        {state.authenticatedUser !== undefined
+          ? "Signed in as: " + state.authenticatedUser
+          : "Not signed in."}
+        <hr />
+        <Child />
+      </AppContext.state.Provider>
+    </AppContext.dispatch.Provider>
+  );
 }
 
 export default App;
